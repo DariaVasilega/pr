@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+{% block title %}Find{% endblock %}
+{% block body %}
+    <div class="container">
+        <a class="btn btn-block btn-dark" href="{{ path('profile_index', {'id': thisUser.id, 'page': page}) }}">Back to profile</a>
+        {% if users == null and groups == null %}
+            <div class="d-flex flex-row justify-content-between">
+                <div class="alert alert-danger text-center special-alert" role="alert" id ="error">
+                    Find nothing, u can back to profile
+                </div>
+            </div>
+        {% else %}
+            <div class="d-flex flex-row justify-content-between text-center">
+                <div class="half w-50 h-100 border border-dark m-2">
+                    <h1 class="m-1">USERS</h1>
+                    <table class="table">
+                        <tr>
+                            <th>Add/Show groups</th>
+                            <th>id</th>
+                            <th>Name</th>
+                            <th>Surname</th>
+                        </tr>
+                        {% for user in users  %}
+                            <tr>
+                                <td>
+                                    <div class="btn-group">
+                                        <div class="btn-group dropleft" role="group">
+                                            <button type="button"
+                                                    class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false">
+                                            </button>
+                                            {% if user.groups.count > 0 %}
+                                                <div class="dropdown-menu">
+                                                    {% for someGroup in user.groups %}
+                                                        <ul class="d-flex flex-row justify-content-between p-1">
+                                                            {% if someGroup not in thisUser.groups %}
+                                                                <li class="remove-markers dropdown-item">
+                                                                    <a tabindex="-1"
+                                                                       class=" btn btn-success btn-sm float-left"
+                                                                       href="{{ path('user_edit',{
+                                                                           'id': thisUser.id,
+                                                                           'page': page,
+                                                                           'groupId': someGroup.id,
+                                                                           'string': string
+                                                                       }) }}">
+                                                                        +
+                                                                    </a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="remove-markers dropdown-item"></li>
+                                                            {% endif %}
+                                                            <li class="remove-markers dropdown-item m-1">
+                                                                <a tabindex="-1"
+                                                                   href="#"
+                                                                class="float-right">
+                                                                    {{ someGroup.name | upper(someGroup.name) }}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <a class=" btn btn-success btn-sm"
+                                           href="{{ path('friend_new',
+                                               {
+                                                   'userId': thisUser.id,
+                                                   'friendId': user.id,
+                                                   'page': page,
+                                                   'string': string
+                                               })}}">
+                                            ADD
+                                        </a>
+                                    </div>
+                                </td>
+
+                                <td class="p-3">
+                                    <a href="{{ path('profile_index',
+                                        {'id': user.id, 'page': 0}) }}">
+                                    {{ user.id }}
+                                    </a>
+                                </td>
+                                <td class="p-3">
+                                    <a href="{{ path('profile_index',
+                                        {'id': user.id, 'page': 0}) }}">
+                                    {{ user.name | upper(user.name)}}
+                                    </a>
+                                </td>
+                                <td class="p-3">
+                                    <a href="{{ path('profile_index',
+                                        {'id': user.id, 'page': 0}) }}">
+                                    {{ user.surname | upper(user.surname)}}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="half w-50 h-100 border border-dark m-2">
+                    <h1>GROUPS</h1>
+                    <table class="table">
+                        <tr>
+                            <th>id</th>
+                            <th>Name</th>
+                            <th>Add/Show users</th>
+                        </tr>
+                        {% for group in groups  %}
+                            <tr>
+                                <td class="p-3">{{ group.id }}</td>
+                                <td class="p-3">{{ group.name | upper(group.name) }}</td>
+                                <td>
+                                    <div class="btn-group dropright">
+                                        <a class=" btn btn-success btn-sm"
+                                           href="{{ path('user_edit',{
+                                               'id': thisUser.id,
+                                               'page': page,
+                                               'groupId': group.id,
+                                               'string': string
+                                           }) }}">
+                                            ADD
+                                        </a>
+                                        <button type="button"
+                                                class="btn btn-info btn-sm dropdown-toggle dropdown-toggle-split"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            {% for someUser in group.user %}
+                                                <ul class="d-flex flex-row p-1">
+                                                    <li class="remove-markers dropdown-item">
+                                                        <img src="{{ asset(someUser.avatar.fileName) }}"
+                                                             class="rounded-circle icon margin-0-5-5-5"
+                                                             alt="Eeem i think here must be a photo ">
+                                                    </li>
+                                                    <li class="remove-markers item">
+                                                        <a tabindex="-1"
+                                                           href="{{ path('profile_index',
+                                                               {'id': someUser.id, 'page': 1})}}">
+                                                            {{ someUser.name | upper(someUser.name) }}
+                                                            {{ someUser.surname | upper(someUser.surname)}}
+                                                        </a>
+                                                    </li>
+                                                        {% if someUser not in checkInFriends(thisUser) and someUser.id != thisUser.id %}
+                                                            <li class="remove-markers dropdown-item">
+                                                                <a tabindex="-1"
+                                                                   class=" btn btn-success btn-sm m-1 float-right"
+                                                                   href="{{ path('friend_new',
+                                                                       {
+                                                                        'userId': thisUser.id,
+                                                                        'friendId': someUser.id,
+                                                                        'page': page,
+                                                                        'string': string
+                                                                       })}}">
+                                                                    +
+                                                                </a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="remove-markers dropdown-item"></li>
+                                                        {% endif %}
+                                                </ul>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

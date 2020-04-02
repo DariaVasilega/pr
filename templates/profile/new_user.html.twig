@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Create user{% endblock %}
+{% block body %}
+    <div class="d-flex flex-row justify-content-between">
+        <div class="alert alert-info text-center special-alert" role="alert" id ="error" hidden>
+            change ur image, needs .jpeg, .jpg, .png or .jpeg 200(.jp2)
+        </div>
+        <div class="alert alert-success text-center special-alert" role="alert" id="success" hidden>
+            Ok, now press submit
+        </div>
+    </div>
+    <div class="create-user">
+        <div class="container w-50">
+            {{ form_start(createUserForm)  }}
+                <div class="d-flex flex-row justify-content-start">
+                    <div class="text-left btn btn-outline-danger btn-block w-50">
+                        {{ form_row(createUserForm.name) }}
+                        <div class="m-4"></div>
+                        {{ form_row(createUserForm.surname) }}
+                        <div class="m-4"></div>
+                        {{ form_row(createUserForm.status) }}
+                        <div class="m-4"></div>
+                        {{ form_row(createUserForm.email) }}
+                        <div class="m-4"></div>
+                        {{ form_row(createUserForm.login) }}
+                        <div class="m-4"></div>
+                        {{ form_row(createUserForm.password) }}
+                        <div class="m-4"></div>
+                    </div>
+                    <div class="m-5"></div>
+                    <div class="d-flex flex-column justify-content-lg-between">
+                        <label class="btn btn-outline-warning" for="create_user_avatar">
+                            <img id='img' alt="hmm interesting..." src="https://image.flaticon.com/icons/png/512/126/126477.png"
+                                 class="special-box">
+                        </label>
+                        {{ form_widget(createUserForm.avatar) }}
+                        <div class="h-25"></div>
+                        <label class="btn btn-outline-success" for="create_user_submit">
+                            <img alt="hmm interesting..."
+                                src="https://image.flaticon.com/icons/svg/462/462951.svg"
+                                class="special-box">
+                        </label>
+                        {{ form_row(createUserForm.submit) }}
+                    </div>
+                </div>
+            {{ form_end(createUserForm)  }}
+        </div>
+    </div>
+{% endblock %}

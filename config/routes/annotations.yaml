@@ -1,0 +1,10 @@
+controllers:
+    resource: ../../src/Controller/
+    type: annotation
+api:
+    resource: ../../src/Controller/API/
+    type: annotation
+    prefix: /api
+
+
+

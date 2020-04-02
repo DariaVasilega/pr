@@ -1,0 +1,3 @@
+App\Entity\Media:
+  media_{1}:
+    fileName: 'upload/without'

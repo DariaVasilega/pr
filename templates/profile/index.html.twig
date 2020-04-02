@@ -1,0 +1,309 @@
+{% extends 'base.html.twig' %}
+{% block title %}Profile{% endblock %}
+{% block body %}
+        <div class="d-flex flex-row justify-content-between">
+            <div class="alert alert-info text-center special-alert" role="alert" id ="error" hidden>
+                change ur image, needs .jpeg, .jpg, .png or .jpeg 200(.jp2)
+            </div>
+            <div class="alert alert-success text-center special-alert" role="alert" id="success" hidden>
+                Ok, now press submit
+            </div>
+        </div>
+        <div class="d-flex justify-content-start">
+            <div class="card card-position">
+                <div class="card-header">
+                    {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                        {{ form_start(searchForm) }}
+                        {{ form_end(searchForm) }}
+                    {% else %}
+                        <div class="m-4"></div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-row justify-content-between">
+                        <div></div>
+                        <div class="avatar">
+                            {% if user.avatar == '' or user.avatar == null %}
+                                <img src="{{ asset('upload/without') }}"
+                                     class="rounded-circle"
+                                     alt="Eeem i think here must be a photo ">
+                            {% else %}
+                            <img src="{{ asset(user.avatar.fileName) }}"
+                                 class="rounded-circle"
+                                 alt="Eeem i think here must be a photo ">
+                            {% endif %}
+                        </div>
+                        {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                            <div></div>
+                        {% endif %}
+                        <div class="user-info">
+                            <div class="col">
+                                {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                    {{ form_start(userForm) }}
+                                        <button type="submit" hidden></button>
+                                    {{ form_end(userForm) }}
+                                {% else %}
+                                    <h5>Name:</h5>
+                                    <h5 class="border border-dark p-1">{{ user.name | upper }}</h5>
+                                    <h5>Surname:</h5>
+                                    <h5 class="border border-dark p-1">{{ user.surname | upper }}</h5>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                    {{ form_start(statusForm) }}
+                                        <button type="submit" hidden></button>
+                                    {{ form_end(statusForm) }}
+                                {% else %}
+                                    <h5>Status:</h5>
+                                    <h5 class="border border-dark p-1">{{ user.status.quote | upper }}</h5>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+                    {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                        {{ form_start(avatarForm) }}
+                        <div class="d-flex flex-row justify-content-center">
+                            <label class="btn btn-outline-warning margin-top-20" for="media_file">
+                                <img alt="hmm interesting..."
+                                     id="img"
+                                     src="https://image.flaticon.com/icons/png/512/126/126477.png"
+                                     class="width-height-20px" >
+                            </label>
+                            {{ form_row(avatarForm) }}
+                            <input type="submit" class="btn btn-dark margin-top-20" value="SUBMIT">
+                        </div>
+                        {{ form_end(avatarForm) }}
+                    {% endif %}
+                    <div class="text-center margin-top-bottom-50">
+                        {% if postFormArray !=null %}
+                            <h4>Posts by {{ user.name | upper(user.name) }}</h4>
+                        {% endif %}
+                    </div>
+                    {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                        <div class="text-right m-1">
+                            {{ form_start(postForm) }}
+                            {{ form_widget(postForm) }}
+                            <button type="submit"
+                                    form="new_post"
+                                    class="btn btn-success margin-top-5"
+                                    value="Submit">ADD</button>
+                            {{ form_end(postForm) }}
+                        </div>
+                    {% endif %}
+                    {% if postFormArray !=null %}
+                        {% for form in postFormArray %}
+                                <div class="post text-right">
+                                    {{ form_start(form) }}
+                                        {{ form_widget(form) }}
+                                    {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                        <button type="submit" class="btn btn-info margin-top-5"
+                                                formaction="{{ path('post_edit',{'id': form.vars.value.id,
+                                                    'page': thisPage}) }}">UPDATE</button>
+                                        {% if postFormArray|length <2 and thisPage !=1 %}
+                                            <button type="submit" class="btn btn-danger margin-top-5"
+                                                    formaction="{{ path('post_delete',{'id': form.vars.value.id,
+                                                        'page': thisPage-1}) }}">REMOVE</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-danger margin-top-5"
+                                                    formaction="{{ path('post_delete',{'id': form.vars.value.id,
+                                                        'page': thisPage}) }}">REMOVE</button>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="m-5"></div>
+                                    {% endif %}
+                                    {{ form_end(form) }}
+                                </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="card-footer d-flex justify-content-end">
+                    <div>{{ pagerfanta(pager, 'twitter_bootstrap4', { 'omitFirstPage': true}) }}</div>
+                </div>
+            </div>
+            <div></div>
+            <div class="d-flex flex-column">
+                <div class="btn-group dropright margin-top-20">
+                    <button class="btn btn-success dropdown-toggle"
+                            id="dropdownMenuButtonFriends" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Friends</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonFriends">
+                        {% for friend in user.friends %}
+                            <li class="dropdown-item">
+                                <ul class="d-flex flex-row justify-content-start p-0">
+                                    <li class="remove-markers">
+                                        {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                            {{ form_start(deleteUserFriendForm, {
+                                                'method': 'DELETE',
+                                                'action': url('friend_delete',{'id': friend.id}) }) }}
+                                            <button class="btn btn-danger btn-sm margin-0-5-5-5">
+                                                x
+                                            </button>
+                                            {{ form_end(deleteUserFriendForm) }}
+                                        {% endif %}
+                                    </li>
+                                    <li class="remove-markers">
+                                        <img src="{{ asset(friend.friend.avatar.fileName) }}"
+                                             class="rounded-circle icon margin-0-5-5-5"
+                                             alt="Eeem i think here must be a photo ">
+                                    </li>
+                                    {% if friend.friend.groups.count > 0 %}
+                                        <li class="remove-markers dropdown-submenu">
+                                            <a class="dropdown-item"
+                                                href="{{ path('profile_index', {'id': friend.friend.id, 'page': 1})}}">
+                                                    {{ friend.friend.name | upper(friend.friend.name) }}
+                                                    {{ friend.friend.surname | upper(friend.friend.surname)}}</a>
+                                            <ul class="dropdown-menu">
+                                                {% for someGroup in friend.friend.groups %}
+                                                    <ul class="d-flex flex-row justify-content-between p-1">
+                                                        <li class="remove-markers dropdown-item m-1">
+                                                            <a tabindex="-1"
+                                                               href="#">
+                                                                {{ someGroup.name | upper(someGroup.name) }}
+                                                            </a>
+                                                        </li>
+                                                        {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                                            {% if someGroup not in user.groups %}
+                                                                <li class="remove-markers dropdown-item">
+                                                                    <a tabindex="-1"
+                                                                       class=" btn btn-success btn-sm float-right"
+                                                                       href="{{ path('user_edit',{'id': user.id, 'page': thisPage, 'groupId': someGroup.id}) }}">
+                                                                        +
+                                                                    </a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="remove-markers dropdown-item"></li>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </ul>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% else  %}
+                                        <li class="remove-markers">
+                                            <a class="dropdown-item"
+                                               href="{{ path('profile_index', {'id': friend.friend.id, 'page': 1})}}">
+                                                    {{ friend.friend.name | upper(friend.friend.name) }}
+                                                    {{ friend.friend.surname | upper(friend.friend.surname) }}</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="dropright margin-top-20">
+                    <button class="btn btn-info dropdown-toggle"
+                            id="dropdownMenuButtonGroups" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                    Groups
+                    </button>
+                    <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+                        {% for group in user.groups %}
+                            <li class="dropdown-item justify-content-between">
+                                <ul class="d-flex flex-row p-0">
+                                    {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                        <li class="remove-markers">
+                                            <a class="btn btn-danger btn-sm margin-0-5-5-5"
+                                               href="{{ path('group_remove_user',
+                                                   {'id': group.id, 'userId': user.id,
+                                                       'page': thisPage}) }}">
+                                                x</a>
+                                        </li>
+                                        <li class="remove-markers">
+                                            {{ form_start(deleteGroupUserForm,{
+                                                'method': 'DELETE',
+                                                'action': url('group_delete',{'id': group.id })}) }}
+                                            <button class="btn btn-outline-warning btn-sm margin-0-5-5-5">
+                                                <img alt="hmm interesting..."
+                                                     src="https://cdn2.iconfinder.com/data/icons/picons-essentials/57/delete-512.png"
+                                                     class="width-height-20px" >
+                                            </button>
+                                            {{ form_end(deleteGroupUserForm) }}
+
+                                        </li>
+                                        <li class="remove-markers">
+                                            <a class="btn btn-outline-info btn-sm margin-0-5-5-5"
+                                               href="{{ path('profile_render_groups',
+                                                   {'id': group.id, 'userId': user.id, 'page': thisPage}) }}">
+                                                <img alt="hmm interesting..."
+                                                     src="https://image.flaticon.com/icons/png/512/84/84380.png"
+                                                     class="width-height-20px">
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                    <li class="remove-markers dropdown-submenu m-1">
+                                        <a>{{ group.name | upper(group.name) }}</a>
+                                        <ul class="dropdown-menu">
+                                            {% for someUser in group.user %}
+                                                <ul class="d-flex flex-row p-1">
+                                                    <li class="remove-markers dropdown-item">
+                                                        <img src="{{ asset(someUser.avatar.fileName) }}"
+                                                             class="rounded-circle icon margin-0-5-5-5"
+                                                             alt="Eeem i think here must be a photo ">
+                                                    </li>
+                                                    <li class="remove-markers dropdown-item m-1">
+                                                        <a tabindex="-1"
+                                                           href="{{ path('profile_index',
+                                                               {'id': someUser.id, 'page': 1})}}">
+                                                            {{ someUser.name | upper(someUser.name)}}
+                                                            {{ someUser.surname | upper(someUser.surname) }}
+                                                        </a>
+                                                    </li>
+                                                    {% if someUser not in checkInFriends(user) and someUser.id != user.id %}
+                                                        <li class="remove-markers dropdown-item">
+                                                            {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                                                <a tabindex="-1"
+                                                                   class=" btn btn-success btn-sm m-0 float-right"
+                                                                   href="{{ path('friend_new',
+                                                                       {'userId': user.id, 'friendId': someUser.id,
+                                                                           'page': thisPage})}}">
+                                                                    +
+                                                                </a>
+                                                            {% endif %}
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="remove-markers dropdown-item"></li>
+                                                    {% endif %}
+                                                </ul>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endfor %}
+                        <li class="dropdown-item">
+                            {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                                {{ form_start(groupForm) }}
+                                <div class="d-flex flex-row justify-content-start">
+                                    <button tabindex="-1"
+                                            formaction="{{ path('group_new',
+                                                {'userId':user.id , 'page':thisPage}) }}"
+                                            class=" btn btn-success btn-sm special-margin-for-add-button">
+                                        +
+                                    </button>
+                                    {{ form_widget(groupForm) }}
+                                </div>
+                                {{ form_end(groupForm) }}
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                {% if app.user == user or is_granted('ROLE_ADMIN') %}
+                    <div class="margin-top-20">
+                        {{ form_start(deleteUserForm,{'method':'DELETE', 'action':url('user_delete',{'id': user.id})}) }}
+                        <button type="submit"
+                                class="btn btn-danger">DELETE</button>
+                        {{ form_end(deleteUserForm) }}
+                    </div>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="margin-top-20">
+                        <a class="btn btn-dark" href="{{ path('admin_index',{'page': thisPage}) }}">Admin Menu</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+{% endblock %}
+

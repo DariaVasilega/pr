@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+{#    {% if app.user %}#}
+{#        <div class="checkbox mb-3">You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a></div>#}
+{#    {% endif %}#}
+    {% if verification != null %}
+        <div class="alert alert-danger text-center special-alert" role="alert" id ="error">
+            check ur email
+        </div>
+    {% endif %}
+    <div class="container w-25 h-25">
+        <div class="col text-center m-1">
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        </div>
+        <div class="col m-2"></div>
+        <div class="col m-2">
+            <label for="inputLogin" class="sr-only">Login</label>
+            <input type="text" value="{{ last_username }}" name="login" id="inputLogin" class="form-control" placeholder="Login" required autofocus>
+        </div>
+        <div class="col m-2">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    {#
+        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+        See https://symfony.com/doc/current/security/remember_me.html
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div>
+    #}
+        <div class="col d-flex flex-row justify-content-between m-2">
+            <a class="btn btn-lg btn-info" href="{{ path('profile_new_user') }}">REGISTRATION</a>
+            <button class="btn btn-lg btn-success" type="submit">
+                SIGN IN
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}

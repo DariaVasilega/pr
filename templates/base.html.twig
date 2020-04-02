@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('build/css/main.css') }}" rel="stylesheet">
+        {% endblock %}
+    </head>
+    <body>
+        {% if app.user != null  %}
+            <div class="logged-user">
+                <h4 class="m-3">
+                    <img  class="rounded-circle icon" src="{{ asset(app.user.avatar.fileName | default(''))  }}" alt="">
+                    <a class="m-2" href="{{ path('profile_index',{'id': app.user.id}) }}">
+                        {{ app.user.name|upper | default('')}} {{ app.user.surname|upper | default('')}}
+                    </a>
+                    <a class="btn btn-block btn-warning m-1"
+                       href="{{ path('app_logout') }}" >LOGOUT</a>
+                </h4>
+            </div>
+        {% endif %}
+        {% block body %}{% endblock %}
+        {% block javascripts %}
+            <script src="{{asset('build/js/main.js')}}"></script>
+        {% endblock %}
+    </body>
+</html>

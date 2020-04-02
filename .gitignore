@@ -1,0 +1,27 @@
+
+###> symfony/framework-bundle ###
+/node_modules/
+/public/build/
+/public/upload/
+/img/
+/.env.local
+/.env.local.php
+/.env.*.local
+/.env.test
+/public/bundles/
+/var/
+/vendor/
+*.iml
+.idea
+out
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php_cs
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
+

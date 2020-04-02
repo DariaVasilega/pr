@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Friend index{% endblock %}
+
+{% block body %}
+    <h1>Friend index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Created</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for friend in friends %}
+            <tr>
+                <td>{{ friend.id }}</td>
+                <td>{{ friend.created ? friend.created|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('friend_show', {'id': friend.id}) }}">show</a>
+                    <a href="{{ path('friend_edit', {'id': friend.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('friend_new') }}">Create new</a>
+{% endblock %}

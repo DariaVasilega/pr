@@ -1,0 +1,154 @@
+body{
+  background: #4e555b;
+}
+label{
+  cursor: pointer;
+}
+ul,
+label{
+  margin: 0;
+}
+p{
+  margin: auto;
+}
+a{
+  vertical-align: center;
+}
+a,
+a:hover{
+  text-decoration: none;
+  color: black;
+}
+.container,
+.create-user .container{
+  margin-top: 50px;
+  background: whitesmoke;
+  padding: 50px;
+}
+.create-user .container{
+  margin-top: 100px;
+}
+.inputs{
+  max-width: 15rem;
+  height: 2rem;
+  font-size: large;
+  text-align: start;
+  color: black;
+  margin-bottom: 5px;
+}
+.input-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.card{
+  width: 35%;
+  max-height: none;
+  border-width: 3px;
+  border-radius: 8px;
+  border-color: #343a40;
+}
+.card-position{
+  margin: 20px 1% 20px 15%;
+}
+.card-header,
+.card-footer{
+  background: #343a40;
+  border: 1px #343a40;
+  max-width: 100%;
+}
+.avatar img{
+  height: 180px;
+  width: 180px;
+}
+.icon{
+  width: 35px;
+  height: 35px;
+}
+.search:enabled{
+  color: #ff455c;
+  border-color: #007bff;
+}
+.search::placeholder{
+  color: #007bff;
+  border-color: #007bff;
+}
+.form-group{
+  margin: 0;
+ }
+.margin-top-5{
+  margin-top: 5px
+}
+.margin-top-20{
+  margin-top: 20px;
+}
+.margin-top-bottom-50{
+  margin: 50px 0 50px 0
+}
+.margin-0-5-5-5{
+  margin:0 5px 5px 5px;
+}
+.width-height-20px{
+  width: 20px; height: 20px;
+}
+.remove-markers{
+  list-style-type: none;
+}
+.group-input{
+  min-width: 200px;
+  height: 2rem;
+}
+::-webkit-input-placeholder {
+  text-align:center;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  text-align:center;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  text-align:center;
+}
+
+:-ms-input-placeholder {
+  text-align:center;
+}
+.special-margin-for-add-button{
+  margin-left: 5px;
+  margin-right: 10px;
+}
+.special-box{
+  width: 205px;
+  height: 205px;
+}
+.special-alert{
+  position: absolute;
+  width: auto;
+  bottom: 0;
+  right: 1rem;
+  height: 50px;
+}
+.custom-file-label{
+  display: none;
+}
+legend{
+  display: none;
+}
+.logged-user {
+  border: 1px solid darkcyan;
+  border-radius: 1rem;
+  background: white;
+  font-family: fantasy;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  a{
+    color: darkcyan;
+  }
+  .btn{
+    color: white;
+  }
+}

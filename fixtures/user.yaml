@@ -1,0 +1,16 @@
+parameters:
+  #password: 12345678
+  hash: '$2a$10$ECGhEo9lDNhLoztoxzKuAu/BwBa.rlxSOMJZAwzOyipyhZtLVEG/W'
+  data: ['ROLE_ADMIN','ROLE_USER']
+
+App\Entity\User:
+  user_{1}:
+    name: 'admin'
+    avatar: '@media_*'
+    surname: 'admin'
+    email: 'test@mail.ru'
+    token: 'admin'
+    roles: <{data}>
+    login: 'admin'
+    verification: true
+    password: <{hash}>

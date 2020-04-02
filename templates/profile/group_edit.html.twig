@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container w-25 h-25">
+        {{ form_start(group) }}
+        <div class="d-flex flex-row p-0">
+            <div class="margin-0-5-5-5">
+                {{ form_widget(group) }}
+            </div>
+            <button type="submit"
+                    class="btn btn-outline-info btn-sm margin-0-5-5-5">
+                <img alt="hmm interesting..."
+                     src="https://image.flaticon.com/icons/png/512/84/84380.png"
+                     class="width-height-20px">
+            </button>
+        </div>
+        {{ form_end(group) }}
+        <a class="btn btn-block btn-dark"
+           href="{{ path('profile_index', {'id': userId, 'page': page}) }}" >BACK</a>
+    </div>
+{% endblock %}
